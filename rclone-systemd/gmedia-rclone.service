@@ -10,17 +10,19 @@ RequiresMountsFor=/data
 [Service]
 Type=notify
 Environment=RCLONE_CONFIG=/data/rclone/rclone.conf
-ExecStart=/usr/bin/rclone mount gcrypt: /data/mounts/rclone \
+ExecStart=/usr/bin/rclone mount gcrypt: /GD \
    --allow-other \
-   --dir-cache-time 72h \
-   --buffer-size 1G \
-   --vfs-read-chunk-size 128M \
-   --vfs-read-chunk-size-limit off \
-   --umask 002 \
    --bind 192.168.1.30 \
+   --buffer-size 1G \
+   --dir-cache-time 72h \
+   --drive-chunk-size 32M \
+   --fast-list \
    --log-level INFO \
-   --log-file /home/felix/logs/rclone.log
-ExecStop=/bin/fusermount -uz /data/mounts/rclone
+   --log-file /home/felix/logs/rclone.log \
+   --umask 002 \
+   --vfs-read-chunk-size 128M \
+   --vfs-read-chunk-size-limit off
+ExecStop=/bin/fusermount -uz /GD
 Restart=on-failure
 User=felix
 Group=felix
