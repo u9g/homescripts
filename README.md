@@ -26,6 +26,8 @@ I use a combination of mergerfs and rclone to keep a local mount that is always 
         /GD (rclone mount)
     /gmedia
 
+[rclone.conf](https://github.com/animosity22/homescripts/blob/master/rclone.conf)
+
 They all get mounted up via my systemd scripts for [gmedia-service](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.service).
 
 My gmedia starts up items in order:
