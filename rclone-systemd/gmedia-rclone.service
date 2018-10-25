@@ -3,10 +3,6 @@ Description=RClone Service
 PartOf=gmedia.service
 RequiresMountsFor=/data
 
-# This uses cmount as it's a built version of rclone from source
-# sync_read must be used or files are read out of order
-# auto_cache allows for system memory to be used
-
 [Service]
 Type=notify
 Environment=RCLONE_CONFIG=/data/rclone/rclone.conf
