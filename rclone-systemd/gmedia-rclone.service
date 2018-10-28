@@ -12,7 +12,6 @@ ExecStart=/usr/bin/rclone mount gcrypt: /GD \
    --buffer-size 1G \
    --dir-cache-time 72h \
    --drive-chunk-size 32M \
-   --fast-list \
    --log-level INFO \
    --log-file /home/felix/logs/rclone.log \
    --umask 002 \
