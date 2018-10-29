@@ -95,4 +95,4 @@ sudo -u vpn -i -- curl ipinfo.io
 # DNS check
 sudo -u vpn -i -- cat /etc/resolv.conf
 
-# This should return your modified DNS settings
+# This should return your modified DNS setting
