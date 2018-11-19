@@ -78,6 +78,26 @@ proxy / 127.0.0.1:32400 {
 }
 ```
 
+Plex also needs to have a few additional steps to be added so Caddy is used in all situations.
+
+### Plex
+
+Remote Access - Disable
+
+```
+Network - Custom server access URLs = https://<your-domain>:443,http://<your-domain>:80
+```
+Network - Secure connections = Preferred
+
+<i>Note: You can force SSL by setting required and not adding the HTTP URL, however some players which do not support HTTPS (e.g: Roku, Playstations, some SmartTVs) will no longer function. I only use SSL is my config and as I do not open up HTTP traffic. </i>
+
+### Stopping Local Access
+
+UFW or other firewall:
+- Deny port 32400 externally (Plex still pings over 32400, some clients may use 32400 by mistake despite 443 and 80 being set).
+
+<i>Note adding allowLocalhostOnly="1" to your Preferences.xml, will make Plex only listen on the localhost, achieving the same thing as using a firewall and this is what I use in my configuration.</i>
+
 ## Known Issues
 
 - Plex Playback
