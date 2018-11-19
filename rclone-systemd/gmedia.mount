@@ -8,7 +8,7 @@ RequiresMountsFor=/data
 What = /data/local:/GD
 Where = /gmedia
 Type = fuse.mergerfs
-Options = use_ino,hard_remove,auto_cache,sync_read,allow_other,category.action=all,category.create=ff
+Options = defaults,sync_read,allow_other,category.action=all,category.create=ff
 
 [Install]
 WantedBy=gmedia.service
