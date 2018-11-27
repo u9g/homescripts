@@ -4,6 +4,9 @@ PartOf=gmedia.service
 After=gmedia.mount
 
 # This just simple does a complete walk of the file system to load the directory structure into the dir-cache
+# If your distro is using systemd 236 or later, replace ExecStart with these lines:
+# ExecStart=/usr/bin/find /gmedia
+# StandardOutput=file:/home/felix/logs/gmedia-find.txt
 
 [Service]
 Type=oneshot
