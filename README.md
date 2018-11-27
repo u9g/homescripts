@@ -20,7 +20,7 @@ For all my private traffic, I use [TorGuard](https://torguard.net/) as they supp
 
 ## Rclone configuration
 
-I use a combination of mergerfs and rclone to keep a local mount that is always written to first and my second mount point is my rclone Google Drive.
+I use a combination of mergerfs and rclone to keep a local mount that is always written to first and my second mount point is my rclone Google Drive. These 2 mount points are unified at /gmedia (which is where the media is accessible to Plex, Emby, etc).
 
         /data/local (local disk)
         /GD (rclone mount)
@@ -45,10 +45,11 @@ I use the following options:
 Options = use_ino,hard_remove,auto_cache,sync_read,allow_other,category.action=all,category.create=ff
 ```
 
-Two important items:
+Important items:
 
 - sync_read as rclone is default built with this and is required for proper streaming
 - category.action=all,category.create=ff says to always create directories / files on the first listed mount point and for my configuration that is my /data/mounts/local
+- if you are reading directly from your rclone mount, you do not need to worry about any of the mergerfs settings.
 
 ## Scheduled Nightly Uploads
 
