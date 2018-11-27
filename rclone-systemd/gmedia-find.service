@@ -7,11 +7,20 @@ After=gmedia.mount
 # If your distro is using systemd 236 or later, replace ExecStart with these lines:
 # ExecStart=/usr/bin/find /gmedia
 # StandardOutput=file:/home/felix/logs/gmedia-find.txt
+#
 
 [Service]
 Type=oneshot
-ExecStart=/bin/sh -c "/usr/bin/find /gmedia > /home/felix/logs/gmedia-find.txt 2>&1"
+
+#ExecStart=/usr/bin/find /gmedia
+#StandardOutput=file:/home/felix/logs/gmedia-find.txt
+#ExecStart=/bin/sh -c "/usr/bin/find /gmedia > /home/felix/logs/gmedia-find.txt 2>&1"
 # This service shall be considered active after start
+#
+# You can also change to the rc command as well
+
+ExecStart=/usr/bin/rclone rc vfs/refresh recursive=true
+
 RemainAfterExit=yes
 User=felix
 Group=felix
