@@ -14,6 +14,7 @@ This is my own location that I used to store my scripts for my home Linux server
 - rTorrent, NZBGet, Sonarr, Radarr and Ombi all run locally on my mergerfs mount that allows hard linking of files.
 
 ## OpenVPN Configuration
+
 For all my private traffic, I use [TorGuard](https://torguard.net/) as they support port forwarding and have very good support.
 
 [Setup and Configuration](https://github.com/animosity22/homescripts/blob/master/OPENVPN.MD)
@@ -42,7 +43,7 @@ I use mergerfs over unionfs as it provides me the ability to define a file syste
 I use the following options:
 
 ```bash
-Options = use_ino,hard_remove,auto_cache,sync_read,allow_other,category.action=all,category.create=ff
+Options = defaults,sync_read,allow_other,category.action=all,category.create=ff
 ```
 
 Two important items:
