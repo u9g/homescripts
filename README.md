@@ -1,6 +1,6 @@
 # README.md
 
-This is my own location that I used to store my scripts for my home Linux server. This is configured for my setup, but welcome any questions.
+This is my configuration that works for me the best for my use case of an all in one media server. This is not meant to be a tutorial by any means as it does require some knowledge to get setup. I'm happy to help out as best as I can and welcome any updates/fixes/pulls to make it better and more helpful to others.
 
 ## Home Configuration
 
@@ -23,7 +23,7 @@ For all my private traffic, I use [TorGuard](https://torguard.net/) as they supp
 
 I use a combination of mergerfs and rclone to keep a local mount that is always written to first and my second mount point is my rclone Google Drive. These 2 mount points are unified at /gmedia (which is where the media is accessible to Plex, Emby, etc).
 
-        /data/local (local disk)
+        /data/local (local mirror disk)
         /GD (rclone mount)
     /gmedia
 
@@ -34,7 +34,7 @@ They all get mounted up via my systemd scripts for [gmedia-service](https://gith
 My gmedia starts up items in order:
 1) [rclone mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-rclone.service)
 2) [mergerfs mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.mount)
-3) [find command](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-find.service) which justs caches the directory and file structure and provides me an output of the structure
+3) [find command](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-find.service) which justs caches the directory and file structure and provides me an output of the structure. This is not required but something I choose to do to warm up the cache.
 
 ## [mergerfs@github](https://github.com/trapexit/mergerfs)
 
@@ -105,6 +105,8 @@ UFW or other firewall:
 - Plex Playback
   - Apple TV (4th generation)
     - Direct Play Stuttering
-      - This happens on both vfs-read-chunk-size and cache. Cache masks this more so since the chunks remain local. If you turn off "Allow Direct Play", this will fix the issue as it will Direct Stream instead. Using another player such as Infuse / Emby works as well as they do not exihibit the Direct Play issue. I will retest this once TVOS 12 hits to see if it has been fixed or not.
-      - RClone debug log shows the files being rapidly opened and closed as the client seems to request part of the file and close it out.
-      - Another work around that seems to be going well for me is using [Caddy](https://github.com/mholt/caddy) as a proxy server.
+      - This <i>seems</i> to be fixed in IOS 12 but I still use a proxy in front of my plex server as I use [Caddy](https://github.com/mholt/caddy) as a proxy server.
+- Plex Music
+	- Music play for plex needs to use the cache backend as it repeatedly opens and closes files. The VFS backend will not work due to this limitation.
+- Bazaar
+	- This seems to create a lot of API hits. It currently does not support forced subs so I don't use it.
