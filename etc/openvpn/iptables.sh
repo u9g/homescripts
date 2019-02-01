@@ -38,6 +38,11 @@ iptables -A OUTPUT -o $INTERFACE -m owner --uid-owner $VPNUSER -j ACCEPT
 # all packets on $INTERFACE needs to be masqueraded
 iptables -t nat -A POSTROUTING -o $INTERFACE -j MASQUERADE
 
+# Close out other ports and rules for stuff
+iptables -A INPUT -p tcp -s 192.168.1.1 --dport 32400 -j ACCEPT
+iptables -A INPUT -p tcp -s 127.0.0.1 --dport 32400 -j ACCEPT
+iptables -A INPUT -p tcp -s 0.0.0.0/0 --dport 32400 -j DROP
+
 #
 for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
     echo 0 > $f
