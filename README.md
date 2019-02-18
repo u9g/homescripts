@@ -25,7 +25,7 @@ For all my private traffic, I use [TorGuard](https://torguard.net/) as they supp
 
 The first step is to get fuse installed and configured properly.
 
-	sudo apt install fuse -t
+	sudo apt install fuse -y
 	
 You need to make the change to /etc/fuse.conf to allow_other by uncommenting the last line by and remove the # from the last line.
 
