@@ -10,8 +10,8 @@
 # 
 # Example envs set from openvpn:
 #
-foreign_option_1='dhcp-option DNS 209.222.18.222'
-foreign_option_2='dhcp-option DNS 209.222.18.218'
+foreign_option_1='dhcp-option DNS 1.1.1.1'
+foreign_option_2='dhcp-option DNS 1.0.0.1'
 foreign_option_3='dhcp-option DNS 8.8.8.8'
 
 [ -x /sbin/resolvconf ] || exit 0
