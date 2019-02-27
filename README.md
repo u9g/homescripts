@@ -21,7 +21,7 @@ For all my private traffic, I use [TorGuard](https://torguard.net/) as they supp
 
 ## Rclone configuration
 
-###Installation
+### Installation
 
 The first step is to get fuse installed and configured properly.
 
@@ -85,7 +85,7 @@ I moved my files to my GD every ngiht via a cron job and an [upload cloud](https
 
 ## Plex and Caddy Configuration
 
-I use [Caddy](https://github.com/mholt/caddy) as a proxy server and route all my items through it. I build via this [script](https://github.com/animosity22/homescripts/blob/master/scripts/build_caddy).
+I use [Caddy](https://github.com/mholt/caddy) as a proxy server and route all my items through it. I build via this [script](https://github.com/animosity22/homescripts/blob/master/scripts/build_caddy). The purpose of the proxy server is to mask any client side issues of opening and closing of files as the Plex clients are very problematic with this. Caddy keeps the connection open and it makes playback seamless.
 
 My plex configuration in my CaddyFile as follows:
 
