@@ -130,7 +130,7 @@ These tips and more for Linux can be found at the [Plex Forum Linux Tips](https:
 
 I use Caddy to server majority of my things as I plug directly into Google Authentication oAuth to make life easier. I removed Caddy from my Plex configuration to remove one layer of complexity as it did not seem to be needed anymore.
 
-My configuration is [here](https://github.com/animosity22/homescripts/blob/master/PROXY.md)
+My configuration is [here](https://github.com/animosity22/homescripts/blob/master/PROXY.MD)
 
 ## OpenVPN Configuration
 
