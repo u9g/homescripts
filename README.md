@@ -11,15 +11,12 @@ This is my configuration that works for me the best for my use case of an all in
 - 32 GB of Memory
 - 250 GB SSD Storage for my root
 - 6TB mirrored for staging
-- rTorrent, NZBGet, Sonarr, Radarr and Ombi all run locally on my mergerfs mount that allows hard linking of files.
 
-## OpenVPN Configuration
+## My Workflow
 
-For all my private traffic, I use [TorGuard](https://torguard.net/) as they support port forwarding and have very good support.
+I use Sonarr and Radarr in conjuction with NZBGet and ruTorrent/rtorrent to get my media. My normal flow is that they grab a file, download it and place it in /gmedia under the correct spot of /gmedia/TV /gmedia/Movies respectively and that is local underneath the covers. Each night, a rclone upload scripts moves from local to my Google Drive.  To acheive that, I use rclone to mount my Google Drive and mergerfs to combine a local disk and Google Drive together to provide a single access point for all services.
 
-[Setup and Configuration](https://github.com/animosity22/homescripts/blob/master/OPENVPN.MD)
-
-## Rclone configuration
+## Rclone and MergerFS
 
 ### Installation
 
@@ -51,9 +48,37 @@ My use case for mergerfs is that I always want to write to the local disk first 
         /GD (rclone mount)
   
 
-My rclone.conf has an entry for the Google Drive connection and and encrypted folder in my Google Drive called "media". I mount media with rclone script to display the decrypted contents to my server. I do not use the cache backend as I just use the default VFS backend. I've found that Plex Music works better with the cache backend as that tends to open and close files a lot. If you are having problems, you can always try to the cache backend to see if that works better for your use case.
+My rclone.conf has an entry for the Google Drive connection and and encrypted folder in my Google Drive called "media". I mount media with rclone script to display the decrypted contents to my server. 
 
 My rclone looks like: [rclone.conf](https://github.com/animosity22/homescripts/blob/master/rclone.conf)
+
+My mount settings and why I use them:
+
+```
+# This is the standar mount with the remote and the mount point location
+/usr/bin/rclone mount gcrypt: /GD \
+# This allows other users than the one mounting it to access the data
+# and needs to be used in conjunction with the /etc/fuse.conf config earlier
+--allow-other \
+# This is the time I want to store the directory and file structure in memory.
+# It will invalidate it if changes are detected so bigger the better
+--dir-cache-time 96h \
+# This is set beacues of a few tests in terms of the sweet spot for uploading
+# files as I do not upload on my mount normally.
+--drive-chunk-size 32M \
+# This shows the level level
+--log-level INFO \
+# This is where I write my log files to
+--log-file /var/log/rclone.log \
+# This helps with pausing and resuming on Plex. It can be larger but 1h seemed
+# good for me
+--timeout 1h \
+# This sets the default umask so user / group / other have permissions like 775.
+--umask 002 \
+# This allows remote control and works with my other startup script that does
+# a RC command to refresh / warm up the dir-cache
+--rc
+```
 
 They all get mounted up via my systemd scripts for [gmedia-service](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.service).
 
@@ -61,6 +86,7 @@ My gmedia starts up items in order:
 1) [rclone mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-rclone.service)
 2) [mergerfs mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.mount) This needs to be named the same as the mount point for the .mount to work properly. I use /gmedia so the file is named accordingly.
 3) [find command](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-find.service) which justs caches the directory and file structure and provides me an output of the structure. This is not required but something I choose to do to warm up the cache.
+
 
 ### mergerfs configuration
 This is located over here if you want to request help or compile from source [mergerfs@github](https://github.com/trapexit/mergerfs)
@@ -83,9 +109,26 @@ Important items:
 
 I moved my files to my GD every ngiht via a cron job and an [upload cloud](https://github.com/animosity22/homescripts/blob/master/scripts/upload_cloud) script. This leverages an [excludes](https://github.com/animosity22/homescripts/blob/master/scripts/excludes) file which gets rid of partials and my torrent directory.
 
+This is my cron entry:
+
+```
+# Cloud Upload
+12 3 * * * /opt/rclone/scripts/upload_cloud
+```
+
+## Plex Tweaks
+If you have a lot of directories and files, it might be helpful to increase the file watchers by adding this to your /etc/sysctl.conf and rebooting. I choose the number below as I wanted to have plenty of capacity over the default.
+
+```
+# Plex optimizations
+fs.inotify.max_user_watches=262144
+```
+
+These tips and more for Linux can be found at the [Plex Forum Linux Tips](https://forums.plex.tv/t/linux-tips/276247)
+
 ## Plex and Caddy Configuration
 
-I use [Caddy](https://github.com/mholt/caddy) as a proxy server and route all my items through it. I build via this [script](https://github.com/animosity22/homescripts/blob/master/scripts/build_caddy). The purpose of the proxy server is to mask any client side issues of opening and closing of files as the Plex clients are very problematic with this. Caddy keeps the connection open and it makes playback seamless.
+I use [Caddy](https://github.com/mholt/caddy) as a proxy server and if you want to use it with Plex, there is a very simple config below that I used. I have since removed this from my config to help simplify things.
 
 My plex configuration in my CaddyFile as follows:
 
@@ -133,3 +176,10 @@ UFW or other firewall:
 - Deny port 32400 externally (Plex still pings over 32400, some clients may use 32400 by mistake despite 443 and 80 being set).
 
 <i>Note adding allowLocalhostOnly="1" to your Preferences.xml, will make Plex only listen on the localhost, achieving the same thing as using a firewall and this is what I use in my configuration.</i>
+
+
+## OpenVPN Configuration
+
+For all my private traffic, I use [TorGuard](https://torguard.net/) as they support port forwarding and have very good support.
+
+[Setup and Configuration](https://github.com/animosity22/homescripts/blob/master/OPENVPN.MD)
