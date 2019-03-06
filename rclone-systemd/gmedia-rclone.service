@@ -6,60 +6,15 @@ PartOf=gmedia.service
 Type=notify
 Environment=RCLONE_CONFIG=/opt/rclone/rclone.conf
 
-# This is a working cache configuration that I was setting and testing to validate how it worked
-# It works well for things that open and close media a lot like music files and some plex players that
-# seem to not open a file one time and play it
-ExecStart=/usr/bin/rclone mount gmedia: /GD \
-# This allow users other than the running process user to access the files
-   --allow-other \
-# The buffer size for the cache backend should be set to 0 as it does its own caching so anything other than 0
-# is wasted memory
-   --buffer-size 0M \
-# This is where rclone stores it cache database
-   --cache-db-path /opt/rclone \
-# This is where chunks are written to disk
-   --cache-chunk-path /opt/rclone \
-# This is the number of cache workers that are used and this was just my number I found through some testing
-# that yielded the best performance in my setup
-   --cache-workers 6 \
-# This is how long directories and files are kept in memory unless something invalidates them. You can make this number
-# as big as you really want. 
-   --dir-cache-time 100h \
-# This is only used for uploading files to my GD and there were a few large tests online that found this to be the
-# sweet spot
-   --drive-chunk-size 32M \
-# This sets the log level and I change it to DEBUG if needed
-   --log-level INFO \
-# Where the log file will be written to
-   --log-file /var/log/rclone.log \
-# The timeout is set for 1 hour to help with resume items that pop up so it keeps a connection going
-   --timeout 1h \
-# This sets the permissions on the files and directories as GD has no concept of this so I override it
-   --umask 002 \
-# this starts the remote control daemon
-   --rc
-
-
-# This is my non cache backend or the standard rclone VFS mount. No items are written to disk and everything is done in memory
-#ExecStart=/usr/bin/rclone mount gcrypt: /GD \
-# This allow users other than the running process user to access the files
-#   --allow-other \
-# The buffer size is when a file is opened and how much memory you want to keep and use. This is per file so depending on your system
-# setting this number too big will cause issues. I've found that in my setup, it really doesn't need to be that big but depending
-# on your config, you may want to move it up or down depending on you hardware.
-#   --buffer-size 256M \
-#   --dir-cache-time 96h \
-#   --drive-chunk-size 32M \
-#   --log-level INFO \
-#   --log-file /var/log/rclone.log \
-#   --timeout 1h \
-#   --umask 002 \
-# This is the size that I found was a nice mix between balancing out the API calls and keeping everything responsive. You do not 
-# want the number to be too small as that generates a lot of API traffic. This works in conjuction with the next parameter to limit
-# the API hits for sequentially reading files. There is no reason to cap it so I leave it at off.
-#   --vfs-read-chunk-size 64M \
-#   --vfs-read-chunk-size-limit off \
-#   --rc 
+ExecStart=/usr/bin/rclone mount gcrypt: /GD \
+--allow-other \
+--dir-cache-time 96h \
+--drive-chunk-size 32M \
+--log-level INFO \
+--log-file /var/log/rclone.log \
+--timeout 1h \
+--umask 002 \
+--rc
 ExecStop=/bin/fusermount -uz /GD
 Restart=on-failure
 User=felix
