@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 VPNIF="tun0"
 VPNUSER="vpn"
@@ -11,6 +11,4 @@ ip route append default via 127.0.0.1 dev lo table $VPNUSER
 ip route flush cache
 
 # run update-resolv-conf script to set VPN DNS
-/etc/openvpn/update-resolv-conf
-
-exit 0
+#/etc/openvpn/update-resolv-conf
