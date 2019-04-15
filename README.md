@@ -6,7 +6,7 @@ This is my configuration that works for me the best for my use case of an all in
 
 - Verizon Gigabit FIOS
 - Google Drive with an Encrypted Media Folder
-- Debian Stretch 9.5
+- Arch Linux
 - Intel(R) Core(TM) i7-7700 CPU @ 3.60GHz
 - 32 GB of Memory
 - 250 GB SSD Storage for my root
@@ -20,9 +20,20 @@ I use Sonarr and Radarr in conjuction with NZBGet and ruTorrent/rtorrent to get 
 
 ### Installation
 
-The first step is to get fuse installed and configured properly.
+The installation has shifted to Arch Linux as I changed from Debian over to that with the first step installing yay as my AUR helper. These steps are all done as a non root user.
 
-	sudo apt install fuse -y
+```
+$ sudo pacman -S git
+$ git clone https://aur.archlinux.org/yay.git
+$ cd yay
+$ makepkg -si
+```
+
+Once yay is installed, I use that for all my installations.
+
+```
+$ yay -S fuse
+```
 	
 You need to make the change to /etc/fuse.conf to allow_other by uncommenting the last line by and remove the # from the last line.
 
@@ -37,9 +48,9 @@ You need to make the change to /etc/fuse.conf to allow_other by uncommenting the
 	# Allow non-root users to specify the allow_other or allow_root mount options.
 	user_allow_other
 	
-After fuse is installed, I install mergerfs as it's already part of the repositories for Debian.
+After fuse is installed, I install mergerfs as it's already part of the repositories for Arch Linux.
 
-	sudo apt install mergerfs -y
+	$ yay -S mergerfs
 
 My use case for mergerfs is that I always want to write to the local disk first and all my applications (Sonarr/Radarr/rTorrent/Plex/Emby/etc) all point directly to /gmedia. For them it's not relevant if the file is local or remote as they should act the same.
 
@@ -80,12 +91,13 @@ My mount settings and why I use them:
 --rc
 ```
 
-They all get mounted up via my systemd scripts for [gmedia-service](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.service).
+They all get mounted up via my systemd scripts as it goes in order of mounting my rclone, running a fine to warm up the cache and the mergerfs mount last.
 
 My gmedia starts up items in order:
 1) [rclone mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-rclone.service)
-2) [mergerfs mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.mount) This needs to be named the same as the mount point for the .mount to work properly. I use /gmedia so the file is named accordingly.
-3) [find command](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-find.service) which justs caches the directory and file structure and provides me an output of the structure. This is not required but something I choose to do to warm up the cache.
+2) [find command](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-find.service) which justs caches the directory and file structure and provides me an output of the structure. This is not required but something I choose to do to warm up the cache.
+3) [mergerfs mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.mount) This needs to be named the same as the mount point for the .mount to work properly. I use /gmedia so the file is named accordingly.
+
 
 
 ### mergerfs configuration
@@ -96,7 +108,7 @@ I found unionfs to not do what I wanted and I can't stand the hidden files so fo
 The following options make it always write to the first disk in the mount:
 
 ```bash
-Options = defaults,sync_read,allow_other,category.action=all,category.create=ff
+Options = defaults,sync_read,auto_cache,use_ino,allow_other,func.getattr=newest,category.action=all,category.create=ff
 ```
 
 Important items:
