@@ -1,4 +1,4 @@
-#! /bin/bash
+#!/bin/bash
 
 export INTERFACE="tun0"
 export VPNUSER="vpn"
@@ -21,9 +21,9 @@ iptables -t mangle -A OUTPUT -j CONNMARK --save-mark
 # allow responses
 iptables -A INPUT -i $INTERFACE -m conntrack --ctstate ESTABLISHED -j ACCEPT
 
-# Allow TCP port 49234
-iptables -A INPUT -i $INTERFACE -p tcp --dport 49234 -m state --state NEW,ESTABLISHED -j ACCEPT
-iptables -A OUTPUT -o $INTERFACE -p tcp --sport 49234 -m state --state NEW,ESTABLISHED -j ACCEPT
+# Allow TCP port 59234
+iptables -A INPUT -i $INTERFACE -p tcp --dport 59234 -m state --state NEW,ESTABLISHED -j ACCEPT
+iptables -A OUTPUT -o $INTERFACE -p tcp --sport 59234 -m state --state NEW,ESTABLISHED -j ACCEPT
 
 # block everything incoming on $INTERFACE to prevent accidental exposing of ports
 iptables -A INPUT -i $INTERFACE -j ACCEPT
@@ -35,16 +35,6 @@ iptables -A OUTPUT -o $INTERFACE -m owner --uid-owner $VPNUSER -j ACCEPT
 
 # all packets on $INTERFACE needs to be masqueraded
 iptables -t nat -A POSTROUTING -o $INTERFACE -j MASQUERADE
-
-# Close out other ports and rules for stuff
-iptables -A INPUT -p tcp -s 192.168.1.1 --dport 32400 -j ACCEPT
-iptables -A INPUT -p tcp -s 127.0.0.1 --dport 32400 -j ACCEPT
-iptables -A INPUT -p tcp -s 0.0.0.0/0 --dport 32400 -j DROP
-
-#
-for f in /proc/sys/net/ipv4/conf/*/rp_filter; do
-    echo 0 > $f
-    done;
 
 # Start routing script
 /etc/openvpn/routing.sh

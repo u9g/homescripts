@@ -1,0 +1,6 @@
+#!/bin/bash
+/usr/bin/iptables -F
+/usr/bin/iptables-restore < /etc/iptables/iptables.rules
+
+# fix dns
+#/etc/openvpn/update-resolv-conf
