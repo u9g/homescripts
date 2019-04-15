@@ -1,6 +1,7 @@
 [Unit]
 Description=RClone Service
-PartOf=gmedia.service
+Wants=network-online.target
+After=network-online.target
 
 [Service]
 Type=notify
@@ -11,7 +12,7 @@ ExecStart=/usr/bin/rclone mount gcrypt: /GD \
 --dir-cache-time 96h \
 --drive-chunk-size 32M \
 --log-level INFO \
---log-file /var/log/rclone.log \
+--log-file /opt/rclone/logs/rclone.log \
 --timeout 1h \
 --umask 002 \
 --rc
@@ -21,4 +22,4 @@ User=felix
 Group=felix
 
 [Install]
-WantedBy=gmedia.service
+WantedBy=multi-user.target

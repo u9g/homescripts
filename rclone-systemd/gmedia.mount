@@ -1,6 +1,5 @@
 [Unit]
 Description = /gmedia MergerFS mount
-PartOf=gmedia.service
 After=gmedia-rclone.service
 RequiresMountsFor=/data
 
@@ -8,7 +7,7 @@ RequiresMountsFor=/data
 What = /data/local:/GD
 Where = /gmedia
 Type = fuse.mergerfs
-Options = defaults,sync_read,allow_other,category.action=all,category.create=ff
+Options = defaults,sync_read,auto_cache,use_ino,allow_other,func.getattr=newest,category.action=all,category.create=ff
 
 [Install]
-WantedBy=gmedia.service
+WantedBy=multi-user.target
