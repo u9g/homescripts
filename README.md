@@ -95,10 +95,8 @@ They all get mounted up via my systemd scripts as it goes in order of mounting m
 
 My gmedia starts up items in order:
 1) [rclone mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-rclone.service)
-2) [find command](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-find.service) which justs caches the directory and file structure and provides me an output of the structure. This is not required but something I choose to do to warm up the cache.
-3) [mergerfs mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.mount) This needs to be named the same as the mount point for the .mount to work properly. I use /gmedia so the file is named accordingly.
-
-
+2) [mergerfs mount](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia.mount) This needs to be named the same as the mount point for the .mount to work properly. I use /gmedia so the file is named accordingly.
+3) [find command](https://github.com/animosity22/homescripts/blob/master/rclone-systemd/gmedia-find.service) which justs caches the directory and file structure and provides me an output of the structure. This is not required but something I choose to do to warm up the cache. This fires and forgets as it takes ~30 seconds so I don't wait for it to complete.
 
 ### mergerfs configuration
 This is located over here if you want to request help or compile from source [mergerfs@github](https://github.com/trapexit/mergerfs)
