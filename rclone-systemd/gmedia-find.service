@@ -8,8 +8,8 @@ Type=simple
 ExecStart=/usr/bin/rclone rc vfs/refresh recursive=true
 
 RemainAfterExit=yes
-User=felix
-Group=felix
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target
