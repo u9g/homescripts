@@ -18,8 +18,8 @@ ExecStart=/usr/bin/rclone mount gcrypt: /GD \
 --rc
 ExecStop=/bin/fusermount -uz /GD
 Restart=on-failure
-User=felix
-Group=felix
+User=root
+Group=root
 
 [Install]
 WantedBy=multi-user.target
