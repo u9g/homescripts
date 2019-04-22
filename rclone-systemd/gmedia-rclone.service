@@ -7,7 +7,7 @@ After=network-online.target
 Type=notify
 Environment=RCLONE_CONFIG=/opt/rclone/rclone.conf
 
-ExecStart=/usr/bin/rclone mount gcrypt: /GD \
+ExecStart=/usr/bin/rclone mount gdrive: /GD \
 --allow-other \
 --dir-cache-time 96h \
 --drive-chunk-size 32M \
